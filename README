@@ -1,0 +1,31 @@
+// Copyright (C) 2021 Cocioran Stefan 331 CA
+
+ - tema1_par - 
+
+The memory for initial generation was allocated here because calloc/malloc is 
+not thread-safe and the thread function (run_genetic_algorithm) arguments were 
+passed as a structure in order to avoid the usage of global variables. Threads 
+are created and the execution of their function begins. When the execution finishes, 
+the resources used are freed.
+
+ - genetic_algorithm_par
+
+First of all, before starting the actual execution of the algorithm, the setting 
+of the initial generation is parallelizded, being equally divided between threads. 
+I tried to parallelize almost every "for" loop I could, using "start" and "end" 
+indexes calculated by the formulas presented in the course/laboratory. The barrier 
+was used multiple times to ensure that there will be no race condition and the 
+individuals' genetic data was computed properly before proceeding with further 
+calculations and data manipulation (fitness computions, mutations, crossovers, 
+copying of individuals). 
+ 
+The compare function used by "qsort" had a "for" loop which was iterating through 
+the chromosomes of an individual. I observed that there is the exact same loop in 
+the "compute_fitness" function. In order to not iterate twice through the same 
+elements, the chromosome incrementation instructions that should have been done 
+here were moved. The value of "first_count" and "second_count" variables were stored 
+in an additional field of the "individual" structure.
+
+The fitness compution function receives two extra parameters, the number of threads 
+and the thread id so that it can be parallelized using the same principle and formulas. 
+
